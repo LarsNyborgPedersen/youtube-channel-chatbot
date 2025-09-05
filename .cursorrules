@@ -1,0 +1,71 @@
+{
+  "project": "YouTube Channel Q&A (Next.js + FastAPI + LangChain + Qdrant + Ollama)",
+  "principles": [
+    "Production-ready, minimal, modular, swappable.",
+    "Follow PROJECT_PLAN.md strictly. Implement only the current step. After completion, update PROJECT_PLAN.md and README, and add/adjust docstrings."
+  ],
+  "architecture": [
+    "Services: frontend (Next.js), backend (FastAPI), qdrant, ollama. Run via Docker Compose.",
+    "Use provider interfaces. For example:LLMProvider, EmbeddingProvider, VectorStore, TranscriptProvider.",
+    "Config via .env -> typed settings module (Pydantic Settings). App must fail fast if required vars are missing.",
+  ],
+  "folders": [
+    "/frontend (Next.js, Radix UI primitives)",
+    "/backend (FastAPI): /api /ingest /vector /llm /core",
+    "/infra (docker-compose, env, scripts)",
+    "/docs (README.md, PROJECT_PLAN.md, BEST_PRACTICES.md)"
+  ],
+  "frontend": [
+    "All network calls go through frontend/src/lib/api.ts.",
+    "Use Radix UI primitives minimally. Keep components in frontend/src/components.",
+    "TypeScript strict, ESLint + Prettier. No any."
+  ],
+  "backend": [
+    "FastAPI routers thin; business logic in services/modules. No business logic in route handlers.",
+    "Use Pydantic models for all request/response schemas.",
+    "Python 3.11+, type hints, Black + Ruff, no wildcard imports.",
+  ],
+  "providers": [
+    "LLMProvider: default Ollama via HTTP (model from env). Keep OpenAI-compatible provider as drop-in later.",
+    "EmbeddingProvider: default sentence-transformers; keep interface to swap to OpenAI-compatible later.",
+    "VectorStore: default Qdrant via Docker Compose. Keep interface so Chroma/Weaviate could be swapped later.",
+    "TranscriptProvider: default youtube-transcript-api; expose hook for Whisper fallback later."
+  ],
+  "vector_db": [
+    "Persist to Qdrant. Collection name and URL from env. Upsert in batches.",
+    "Chunk transcripts; store {doc_id, chunk_id, text, metadata}.",
+    "Query top_k=6–8; return text + ids for citations."
+  ],
+  "llm": [
+    "Plain (non-streaming) responses in v1. Timeouts and retries.",
+    "No hardcoded model names/URLs; read from settings."
+  ],
+  "security_observability": [
+    "No secrets in code. Validate and sanitize all external inputs (URLs, paths).",
+    "Structured JSON logs. Log every API call (path, latency, status).",
+    "Fail closed on missing env; clear error messages."
+  ],
+  "testing": [
+    "Backend-only tests for v1: chunking, embedding stub, vector search, prompt assembly, /ask happy path with LLM mocked.",
+  ],
+  "docs_process": [
+    "README must include run instructions (docker compose up), env vars, endpoints.",
+    "PROJECT_PLAN.md: keep current step at top; mark steps done after commits.",
+    "Update README and relevant docstrings when modifying APIs or providers."
+  ],
+  "cursor_workflow": [
+    "Before generating code, read PROJECT_PLAN.md and implement only the current step.",
+    "Keep diffs small and scoped (one endpoint/component/function at a time).",
+    "Respect provider interfaces; do not bypass api.ts or service layers."
+  ],
+  "compose": [
+    "docker-compose defines: frontend, backend, qdrant, ollama. Shared network, explicit ports.",
+    "Backend waits for Qdrant and Ollama health before serving traffic."
+  ],
+  "forbid": [
+    "Hardcoded hosts/keys/models.",
+    "Inline business logic in routers/components.",
+    "Cross-imports between frontend and backend.",
+    "Large multi-feature commits; avoid implementing future steps early."
+  ]
+}
