@@ -24,7 +24,7 @@ export default function LoadingPage() {
           clearInterval(interval)
           // Navigate to chat page after loading is complete
           setTimeout(() => {
-            router.push('/chat')
+            router.push(`/chat?channelUrl=${encodeURIComponent(channelUrl)}`)
           }, 500)
           return 100
         }

@@ -13,13 +13,14 @@ export default function ChatPage() {
   const router = useRouter()
 
   useEffect(() => {
-    // Get channel URL from sessionStorage
-    const storedChannelUrl = sessionStorage.getItem('channelUrl')
-    if (!storedChannelUrl) {
+    // Read channel URL from the URL query param
+    const searchParams = new URLSearchParams(window.location.search)
+    const urlParam = searchParams.get('channelUrl')
+    if (!urlParam) {
       router.push('/channel')
       return
     }
-    setChannelUrl(storedChannelUrl)
+    setChannelUrl(urlParam)
   }, [router])
 
   const handleAskQuestion = () => {
