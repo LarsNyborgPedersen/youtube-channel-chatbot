@@ -7,19 +7,35 @@ After completing a step, mark it ✅ and update this file with the next step as 
 ---
 
 ## Current Step
-**Step 1 — Frontend Skeleton**
+**Step 2 — Transcript Ingestion (Backend)**
 
-- Create a Next.js frontend.
-- Screen 1: Input box for YouTube channel URL + "Create Chatbot" button.
-- On click, transition to Screen 2 (loading indicator).
-- Screen 3: Input box for a question + "Ask Question" button + output area + "Back" button at top.
-- At this stage, nothing connects to backend. Pure UI only.
+- Add FastAPI backend.
+- Endpoint `/fetch_transcripts`:
+  - Input: YouTube channel URL.
+  - Use `yt-dlp` to list video IDs.
+  - Use `youtube-transcript-api` to fetch transcripts.
+  - Output: JSON array of transcripts.
+- Frontend: on "Create Chatbot", call `/fetch_transcripts`.
+- Show loading spinner until finished.
+- After complete, display transcript text in Screen 3 for confirmation.
+
+---
+
+## Completed Steps
+
+✅ **Step 1 — Frontend Skeleton** *(Completed)*
+- Created Next.js frontend with TypeScript, Radix UI, and TailwindCSS
+- Screen 1: YouTube channel URL input with validation + "Create Chatbot" button
+- Screen 2: Loading indicator with spinner animation
+- Screen 3: Question input + "Ask Question" button + output area + "Back" button
+- Pure UI implementation with state management for screen transitions
+- Modern, responsive design with proper error handling
 
 ---
 
 ## Next Steps
 
-**Step 2 — Transcript Ingestion (Backend)**
+**Step 3 — Store Transcripts in Vector DB**
 - Add FastAPI backend.
 - Endpoint `/fetch_transcripts`:
   - Input: YouTube channel URL.
