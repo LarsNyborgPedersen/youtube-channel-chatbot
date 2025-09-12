@@ -5,11 +5,13 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { ArrowLeft, MessageCircle } from 'lucide-react'
+import type { TranscriptItem } from '@/lib/api'
 
 export default function ChatPage() {
   const [question, setQuestion] = useState('')
   const [answer, setAnswer] = useState('')
   const [channelUrl, setChannelUrl] = useState('')
+  const [transcripts, setTranscripts] = useState<TranscriptItem[]>([])
   const router = useRouter()
 
   useEffect(() => {
@@ -21,6 +23,12 @@ export default function ChatPage() {
       return
     }
     setChannelUrl(urlParam)
+    const stored = sessionStorage.getItem('transcripts')
+    if (stored) {
+      try {
+        setTranscripts(JSON.parse(stored))
+      } catch {}
+    }
   }, [router])
 
   const handleAskQuestion = () => {
@@ -103,6 +111,25 @@ export default function ChatPage() {
                   </h3>
                   <div className="bg-gray-50 rounded-lg p-4 border">
                     <p className="text-gray-700 whitespace-pre-wrap">{answer}</p>
+                  </div>
+                </div>
+              )}
+
+              {transcripts.length > 0 && (
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                    Transcripts (preview)
+                  </h3>
+                  <div className="bg-gray-50 rounded-lg p-4 border max-h-64 overflow-auto text-sm text-gray-700 space-y-3">
+                    {transcripts.slice(0, 3).map((t, idx) => (
+                      <div key={`${t.video_id}-${idx}`}>
+                        <div className="font-medium truncate">{t.title || t.video_id}</div>
+                        <div className="line-clamp-3">{t.text}</div>
+                      </div>
+                    ))}
+                    {transcripts.length > 3 && (
+                      <div className="text-gray-500">and {transcripts.length - 3} more…</div>
+                    )}
                   </div>
                 </div>
               )}

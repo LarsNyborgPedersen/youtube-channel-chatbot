@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
+import { fetchTranscripts } from '@/lib/api'
 
 export default function LoadingPage() {
   const [progress, setProgress] = useState(0)
@@ -17,22 +18,32 @@ export default function LoadingPage() {
       return
     }
 
-    // Simulate loading progress
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval)
-          // Navigate to chat page after loading is complete
-          setTimeout(() => {
-            router.push(`/chat?channelUrl=${encodeURIComponent(channelUrl)}`)
-          }, 500)
-          return 100
-        }
-        return prev + 10
-      })
-    }, 200)
+    let cancelled = false
 
-    return () => clearInterval(interval)
+    async function run() {
+      try {
+        // Simulate progress while calling backend
+        const interval = setInterval(() => {
+          setProgress((prev) => (prev >= 95 ? 95 : prev + 5))
+        }, 200)
+
+        const res = await fetchTranscripts(channelUrl)
+        clearInterval(interval)
+        if (cancelled) return
+        setProgress(100)
+        // Store transcripts in sessionStorage for now
+        sessionStorage.setItem('transcripts', JSON.stringify(res.transcripts))
+        router.push(`/chat?channelUrl=${encodeURIComponent(channelUrl)}`)
+      } catch (_e) {
+        // On error, go back to channel page
+        router.push('/channel')
+      }
+    }
+
+    run()
+    return () => {
+      cancelled = true
+    }
   }, [router])
 
   return (

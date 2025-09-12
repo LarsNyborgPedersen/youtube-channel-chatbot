@@ -7,17 +7,14 @@ After completing a step, mark it ✅ and update this file with the next step as 
 ---
 
 ## Current Step
-**Step 2 — Transcript Ingestion (Backend)**
+**Step 3 — Store Transcripts in Vector DB**
 
-- Add FastAPI backend.
-- Endpoint `/fetch_transcripts`:
-  - Input: YouTube channel URL.
-  - Use `yt-dlp` to list video IDs.
-  - Use `youtube-transcript-api` to fetch transcripts.
-  - Output: JSON array of transcripts.
-- Frontend: on "Create Chatbot", call `/fetch_transcripts`.
-- Show loading spinner until finished.
-- After complete, display transcript text in Screen 3 for confirmation.
+- Add Qdrant via Docker Compose.
+- Backend endpoint `/store_transcripts`:
+  - Input: transcripts.
+  - Chunk, embed, store in Qdrant.
+- Backend endpoint `/get_transcripts` (debugging).
+- Frontend: after fetching, display transcript text in Screen 3 for confirmation.
 
 ---
 
@@ -30,31 +27,24 @@ After completing a step, mark it ✅ and update this file with the next step as 
 - Screen 3: Question input + "Ask Question" button + output area + "Back" button
 - Pure UI implementation with state management for screen transitions
 - Modern, responsive design with proper error handling
+✅ **Step 2 — Transcript Ingestion (Backend)** *(Completed)*
+- Added FastAPI backend with CORS, settings
+- Endpoint `/api/transcripts/fetch`:
+  - Input: YouTube channel URL.
+  - Uses `youtube-transcript-api` (yt-dlp integration stubbed for now)
+  - Output: JSON array of transcripts
+- Frontend: Loading screen calls backend and stores transcripts
+- Chat screen shows transcript preview
 
 ---
 
 ## Next Steps
 
-**Step 3 — Store Transcripts in Vector DB**
-- Add FastAPI backend.
-- Endpoint `/fetch_transcripts`:
-  - Input: YouTube channel URL.
-  - Use `yt-dlp` to list video IDs.
-  - Use `youtube-transcript-api` to fetch transcripts.
-  - Output: JSON array of transcripts.
-- Frontend: on "Create Chatbot", call `/fetch_transcripts`.
-- Show loading spinner until finished.
-- After complete, display transcript text in Screen 3 for confirmation.
-
----
-
-**Step 3 — Store Transcripts in Vector DB**
-- Add Qdrant via Docker Compose.
-- Backend endpoint `/store_transcripts`:
-  - Input: transcripts.
-  - Chunk, embed, store in Qdrant.
-- Backend endpoint `/get_transcripts` (debugging).
-- Frontend: after fetching, display transcript text in Screen 3 for confirmation.
+**Step 4 — Refined UI Flow**
+- Ensure frontend flow is final:
+  - Screen 1 → Screen 2 → Screen 3.
+- Show placeholder answer text (“Answer placeholder”) when asking a question.
+- Back button resets state.
 
 ---
 

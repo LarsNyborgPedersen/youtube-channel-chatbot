@@ -1,70 +1,89 @@
-# YouTube Channel Q&A - Frontend
+# Frontend - YouTube Channel Q&A
 
-A Next.js frontend for the YouTube Channel Q&A chatbot application.
+Next.js frontend for the YouTube Channel Q&A chatbot application.
 
-## Getting Started
+## Quick Start
 
 ### Prerequisites
-
-- Node.js 18+ 
+- Node.js 18+
 - Yarn package manager
+- Backend running on http://localhost:8000
 
-### Installation
+### Development
 
-1. Install dependencies:
 ```bash
+# Install dependencies
 yarn install
-```
 
-2. Run the development server:
-```bash
+# Start development server
 yarn dev
-```
 
-3. Open [http://localhost:3000](http://localhost:3000) in your browser.
+# Open http://localhost:3000
+```
 
 ### Available Scripts
 
 - `yarn dev` - Start development server
-- `yarn build` - Build for production
+- `yarn build` - Build for production  
 - `yarn start` - Start production server
 - `yarn lint` - Run ESLint
 - `yarn type-check` - Run TypeScript type checking
+
+## Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `NEXT_PUBLIC_BACKEND_URL` | Backend API URL | `http://localhost:8000` |
 
 ## Project Structure
 
 ```
 src/
 ├── app/
-│   ├── globals.css      # Global styles
-│   ├── layout.tsx       # Root layout
-│   └── page.tsx         # Main page component
+│   ├── channel/         # Channel URL input page
+│   ├── loading/         # Loading/processing page
+│   ├── chat/           # Q&A chat interface
+│   ├── globals.css     # Global styles
+│   └── layout.tsx      # Root layout
 ├── components/
-│   └── ui/              # Reusable UI components
+│   └── ui/             # Reusable UI components
 │       ├── button.tsx
 │       ├── input.tsx
 │       └── textarea.tsx
 └── lib/
-    └── utils.ts         # Utility functions
+    ├── api.ts          # Backend API client
+    └── utils.ts        # Utility functions
+```
+
+## Features
+
+- **Channel Input**: YouTube channel URL validation and submission
+- **Loading State**: Progress indicator during transcript processing
+- **Chat Interface**: Question input with AI-powered responses
+- **Transcript Preview**: Shows fetched transcripts for verification
+
+## API Integration
+
+The frontend communicates with the backend via `src/lib/api.ts`:
+
+```typescript
+// Fetch transcripts from YouTube channel
+const transcripts = await fetchTranscripts(channelUrl)
 ```
 
 ## UI Components
 
-The app uses custom UI components built on top of Radix UI primitives:
+Built with Radix UI primitives and TailwindCSS:
 
-- **Button**: Various button styles and sizes
-- **Input**: Text input with consistent styling
-- **Textarea**: Multi-line text input
+- **Button**: Various styles and sizes with loading states
+- **Input**: Text input with validation
+- **Textarea**: Multi-line text input for questions
 
 ## State Management
 
-The app uses React's built-in `useState` hook for simple state management across the three screens:
+React hooks for state management:
 
-- `currentScreen`: Tracks which screen to display
-- `channelUrl`: Stores the YouTube channel URL
-- `question`: Stores the user's question
-- `answer`: Stores the chatbot's response
-
-## Next Steps
-
-This frontend skeleton will be connected to the backend API in subsequent steps to enable real transcript fetching and AI-powered question answering.
+- Channel URL persistence across screens
+- Loading states and progress tracking
+- Transcript storage and display
+- Question/answer state management
